@@ -1,506 +1,360 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nextcloud Enterprise Deployment: Master Case Study</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Case Study: NextCloud 20 Hub — The Dashboard Era</title>
+    <!-- Tailwind + Font Awesome + custom smoothness -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!--
-    Palette Chosen: "Cyber Magenta & Cyan" (Backgrounds: #0f172a, #1e293b, Accents: #0082c9, #e20074, #00e5ff, Text: #f8fafc)
-    
-    Narrative Plan:
-    1. Header & Overview: Establishes Nextcloud Hub as the sovereign CCP alternative.
-    2. Strategic Goals: Grid layout detailing Digital Sovereignty, Consolidation, Cost Efficiency, and Performance.
-    3. Scale & Impact (Case Studies): Visualizes the user base scale (T-Systems vs others) and database performance improvements (TU Berlin).
-    4. Hardware & Specifications: A grouped bar chart displaying CPU/RAM scaling across deployment sizes.
-    5. Core Ecosystem: Breakdown of Files, Office, Talk, and AI features.
-    6. Proof of Concept: Visual gallery for personal deployment verification.
-
-    Chart Choices:
-    - User Base Scale (Goal: Compare): Horizontal Bar Chart to accommodate vastly different scales. Chosen Library: Chart.js. NO SVG used.
-    - Database Load Reduction (Goal: Inform/Compare): Vertical Bar Chart showing percentage drop. Chosen Library: Chart.js. NO SVG used.
-    - Hardware Sizing (Goal: Compare): Grouped Bar Chart comparing CPU and RAM requirements across tiers. Chosen Library: Chart.js. NO SVG used.
-    
-    Explicit Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output.
-    -->
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            scroll-behavior: smooth;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 40vh;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nextcloud: {
+                            blue: '#0082c9',
+                            dark: '#005d93',
+                            light: '#e5f3fa'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'Segoe UI', 'sans-serif']
+                    }
+                }
             }
         }
-        .glass-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-            border-radius: 0.75rem;
+    </script>
+    <style>
+        /* subtle image hover & glass effect */
+        .img-hover-zoom {
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
         }
-        .text-accent-blue { color: #0082c9; }
-        .text-accent-magenta { color: #e20074; }
-        .text-accent-cyan { color: #00e5ff; }
-        .bg-accent-blue { background-color: #0082c9; }
-        .bg-accent-magenta { background-color: #e20074; }
-        .border-accent-cyan { border-color: #00e5ff; }
-        
-        /* Custom scrollbar for better UX on Vercel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .img-hover-zoom:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 25px -12px rgba(0,0,0,0.15);
+        }
+        .gradient-bg {
+            background: linear-gradient(115deg, #0082c9 0%, #003f60 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 12px 28px -8px rgba(0,0,0,0.08);
+        }
+        ::selection {
+            background: #0082c9;
+            color: white;
+        }
+        .signature-border {
+            border-image: linear-gradient(135deg, #0082c9, #6ab0de) 1;
+        }
     </style>
 </head>
-<body class="antialiased overflow-x-hidden">
+<body class="font-sans text-gray-800 bg-gray-50 antialiased">
 
-    <nav class="sticky top-0 z-50 bg-[#0f172a] border-b border-[#334155] bg-opacity-90 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span class="text-3xl font-bold text-accent-blue">☁️</span>
-                <span class="font-bold text-xl tracking-wider">NEXTCLOUD<span class="text-accent-cyan">HUB</span></span>
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-300">
-                <a href="#overview" class="hover:text-white transition">Overview</a>
-                <a href="#goals" class="hover:text-white transition">Goals</a>
-                <a href="#impact" class="hover:text-white transition">Impact</a>
-                <a href="#specs" class="hover:text-white transition">Specs</a>
-                <a href="#poc" class="hover:text-white transition">Gallery</a>
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-cloud-arrow-up text-nextcloud-blue text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight text-gray-800">NextCloud <span class="text-nextcloud-blue">Hub</span><span class="text-sm font-normal text-gray-500 ml-1">v20</span></span>
+                </div>
+                <div class="hidden md:flex space-x-7">
+                    <a href="#overview" class="text-gray-600 hover:text-nextcloud-blue transition font-medium">Overview</a>
+                    <a href="#goals" class="text-gray-600 hover:text-nextcloud-blue transition font-medium">Goals</a>
+                    <a href="#specs" class="text-gray-600 hover:text-nextcloud-blue transition font-medium">Tech specs</a>
+                    <a href="#features" class="text-gray-600 hover:text-nextcloud-blue transition font-medium">Features</a>
+                    <a href="#credits" class="text-nextcloud-blue hover:text-nextcloud-dark transition font-medium border-b-2 border-nextcloud-blue pb-0.5">Credits</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <header id="overview" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            The Sovereign <span class="text-accent-magenta">Enterprise</span>
-        </h1>
-        <p class="mt-4 max-w-3xl mx-auto text-xl text-slate-400">
-            A comprehensive analysis of Nextcloud Hub deployments. Reclaiming data privacy, eliminating shadow IT, and serving millions of users across European enterprises, governments, and global NGOs.
-        </p>
+    <!-- Hero Section with dashboard preview -->
+    <header class="gradient-bg text-white py-20 lg:py-28">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 flex flex-col lg:flex-row items-center gap-12">
+            <div class="lg:w-1/2 text-center lg:text-left">
+                <span class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-1 text-sm font-semibold tracking-wide mb-5">✨ Release analysis · NextCloud Hub 20</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">Dashboard is here:<br>centralize your digital life</h1>
+                <p class="text-lg text-blue-50/90 mb-8 max-w-xl mx-auto lg:mx-0">Unified widgets, global search, threaded mail, and deep calendar‑Deck integration — the self‑hosted workspace evolves.</p>
+                <a href="#features" class="inline-flex items-center gap-2 bg-white text-nextcloud-dark px-7 py-3 rounded-full font-semibold shadow-lg hover:bg-gray-100 transition">
+                    Explore features <i class="fa-solid fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+            <div class="lg:w-1/2 flex justify-center">
+                <img src="nextcloud20-dashboard.png" alt="Nextcloud 20 Dashboard showing status, recommended files, talk mentions, upcoming events" class="rounded-2xl shadow-2xl border-4 border-white/30 w-full max-w-md lg:max-w-lg img-hover-zoom">
+            </div>
+        </div>
     </header>
 
-    <section id="goals" class="py-16 bg-[#162032]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold border-l-4 border-accent-cyan pl-4">Strategic Deployment Goals</h2>
-                <p class="mt-4 text-slate-400 max-w-2xl">Enterprises do not migrate simply for cloud storage; they migrate to achieve four critical operational objectives.</p>
+    <!-- Overview Section -->
+    <section id="overview" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">From file sync to <span class="text-nextcloud-blue">productivity hub</span></h2>
+                <div class="w-20 h-1 bg-nextcloud-blue mx-auto mt-3 rounded-full"></div>
+                <p class="text-gray-600 text-lg mt-5">NextCloud 20 marks a strategic shift: integrating Talk, Mail, Deck, and external services into a unified dashboard experience.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <div class="glass-card p-6 border-t-4 border-t-[#e20074]">
-                    <div class="text-4xl mb-4">🛡️</div>
-                    <h3 class="text-xl font-bold mb-2">Digital Sovereignty</h3>
-                    <p class="text-sm text-slate-400">Retain 100% data control on self-hosted or air-gapped infrastructure to satisfy GDPR, HIPAA, and strict governmental security regulations.</p>
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-calendar_list_view.png" alt="Nextcloud 20 calendar list view with events and meeting details" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
                 </div>
-                
-                <div class="glass-card p-6 border-t-4 border-t-[#0082c9]">
-                    <div class="text-4xl mb-4">🧩</div>
-                    <h3 class="text-xl font-bold mb-2">Tool Consolidation</h3>
-                    <p class="text-sm text-slate-400">Eliminate shadow IT by replacing disjointed SaaS like Dropbox, Slack, and Zoom with a cohesive, all-in-one suite.</p>
-                </div>
-                
-                <div class="glass-card p-6 border-t-4 border-t-[#00e5ff]">
-                    <div class="text-4xl mb-4">📉</div>
-                    <h3 class="text-xl font-bold mb-2">Cost Efficiency</h3>
-                    <p class="text-sm text-slate-400">Bypass per-user public cloud licensing fees by leveraging open-source editions or flat-tier Enterprise support.</p>
-                </div>
-                
-                <div class="glass-card p-6 border-t-4 border-t-[#f59e0b]">
-                    <div class="text-4xl mb-4">⚡</div>
-                    <h3 class="text-xl font-bold mb-2">High Performance</h3>
-                    <p class="text-sm text-slate-400">Modernized DB queries and High-Performance Backends support up to millions of concurrent users without ballooning costs.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="impact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="mb-16">
-            <h2 class="text-3xl font-bold border-l-4 border-accent-cyan pl-4">Scale & Proven Impact</h2>
-            <p class="mt-4 text-slate-400 max-w-2xl">Real-world data demonstrates Nextcloud's ability to handle massive scale while simultaneously reducing infrastructure strain.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div>
-                <h3 class="text-2xl font-bold mb-4 text-accent-magenta">Handling Millions of Users</h3>
-                <p class="text-slate-300 mb-6">
-                    Deutsche Telekom (T-Systems) executed a six-month live migration to move millions of public cloud users to a fully sovereign Nextcloud environment, known as MagentaCLOUD. This scale dwarfs typical corporate deployments, proving Nextcloud's enterprise viability.
-                </p>
-                <div class="glass-card p-6">
-                    <div class="text-sm text-slate-400 uppercase tracking-wide mb-1">T-Systems Migration Scale</div>
-                    <div class="text-5xl font-extrabold text-white">2.2 Million</div>
-                    <div class="text-accent-cyan mt-2 font-semibold">Active Users Hosted on OTC</div>
-                </div>
-            </div>
-            <div class="glass-card p-6 w-full">
-                <h4 class="text-center text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">User Base Comparison across Case Studies</h4>
-                <div class="chart-container">
-                    <canvas id="scaleChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div class="order-2 lg:order-1 glass-card p-6 w-full">
-                <h4 class="text-center text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">Database Load Reduction Post-Migration</h4>
-                <div class="chart-container">
-                    <canvas id="dbChart"></canvas>
-                </div>
-            </div>
-            <div class="order-1 lg:order-2">
-                <h3 class="text-2xl font-bold mb-4 text-accent-blue">TU Berlin: Optimizing Performance</h3>
-                <p class="text-slate-300 mb-6">
-                    Supporting 30,000 students and staff, TU Berlin's legacy sync engine suffered from heavy database loads. Migrating to Nextcloud restored UI snappiness and improved sync times without requiring any new hardware investments.
-                </p>
-                <div class="flex space-x-4">
-                    <div class="glass-card p-4 flex-1 border-l-2 border-l-[#00e5ff]">
-                        <div class="text-3xl font-bold text-white mb-1">70 TB</div>
-                        <div class="text-xs text-slate-400 uppercase">Data Managed</div>
-                    </div>
-                    <div class="glass-card p-4 flex-1 border-l-2 border-l-[#e20074]">
-                        <div class="text-3xl font-bold text-white mb-1">16</div>
-                        <div class="text-xs text-slate-400 uppercase">DFN Institutions</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="glass-card p-8 bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-[#334155] text-center">
-            <h3 class="text-2xl font-bold mb-2">DEGES: Public Sector Infrastructure</h3>
-            <p class="text-slate-300 max-w-3xl mx-auto mb-6">
-                Managing massive, state-sponsored construction blueprints requires a platform meeting strict German compliance standards. DEGES trusts Nextcloud to securely collaborate on multi-stakeholder engineering projects.
-            </p>
-            <div class="inline-block bg-[#0f172a] rounded-full px-8 py-4 border border-accent-cyan">
-                <span class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-blue">€22 Billion</span>
-                <span class="block text-sm text-slate-400 mt-1 uppercase tracking-widest">In Managed Project Values</span>
-            </div>
-        </div>
-    </section>
-
-    <section id="specs" class="py-20 bg-[#162032]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold border-l-4 border-accent-cyan pl-4">Hardware Sizing & Specifications</h2>
-                <p class="mt-4 text-slate-400 max-w-2xl">Nextcloud scales elastically from small office test environments to massive distributed clusters serving tens of thousands of users per node.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="glass-card p-6 w-full">
-                    <h4 class="text-center text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">Minimum Required Resources per Node</h4>
-                    <div class="chart-container">
-                        <canvas id="hwChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="flex flex-col justify-center space-y-6">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#1e293b] border border-accent-blue flex items-center justify-center text-xl">🐧</div>
-                        <div class="ml-4">
-                            <h4 class="text-lg font-bold text-white">Server Environment</h4>
-                            <p class="text-sm text-slate-400 mt-1">Ubuntu 24.04 LTS, RHEL 9/10, Debian 12/13. Apache 2.4 or NGINX with PHP 8.3/8.4.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#1e293b] border border-accent-magenta flex items-center justify-center text-xl">🗄️</div>
-                        <div class="ml-4">
-                            <h4 class="text-lg font-bold text-white">Database Engines</h4>
-                            <p class="text-sm text-slate-400 mt-1">MySQL 8.4 or MariaDB 11.4+ (InnoDB, READ COMMITTED). PostgreSQL 14-17+ highly recommended for massive scale.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-[#1e293b] border border-accent-cyan flex items-center justify-center text-xl">🏗️</div>
-                        <div class="ml-4">
-                            <h4 class="text-lg font-bold text-white">Enterprise Architecture</h4>
-                            <p class="text-sm text-slate-400 mt-1">Multi-node clustered Application Servers behind F5 Load Balancers. Redis cluster over LXD. Galera DB clusters with SQL proxy splitting.</p>
-                        </div>
+                <div class="lg:w-1/2 space-y-4 text-gray-600 text-lg">
+                    <p>Based on community insights, NextCloud evolved from a Dropbox-like file storage to a self-hosted collaboration platform. <strong>Version 20 (Hub)</strong> introduces a long-awaited dashboard — a central cockpit for notifications, upcoming tasks, and activity streams.</p>
+                    <p>It redefines user interaction by merging calendar events, Talk mentions, and third-party widgets (GitHub, Jira, Twitter) into one glanceable interface. The result: reduced context switching and a true open-source alternative to proprietary suites.</p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <span class="bg-blue-50 text-nextcloud-dark px-3 py-1 rounded-full text-sm font-medium"><i class="fa-regular fa-clock mr-1"></i> Real-time sync</span>
+                        <span class="bg-blue-50 text-nextcloud-dark px-3 py-1 rounded-full text-sm font-medium"><i class="fa-regular fa-compass mr-1"></i> Unified search</span>
+                        <span class="bg-blue-50 text-nextcloud-dark px-3 py-1 rounded-full text-sm font-medium"><i class="fa-regular fa-calendar mr-1"></i> Deck cards in calendar</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="mb-12 text-center">
-            <h2 class="text-3xl font-bold inline-block border-b-4 border-accent-magenta pb-2">Unified Feature Ecosystem</h2>
-            <p class="mt-4 text-slate-400 max-w-2xl mx-auto">Organizations deploy Nextcloud in phases, utilizing these core modules to replace proprietary platforms.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="glass-card p-6 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition-transform">📁</div>
-                <h3 class="text-xl font-bold text-accent-blue mb-3">Nextcloud Files</h3>
-                <ul class="text-sm text-slate-300 space-y-2">
-                    <li>• Native desktop & mobile clients</li>
-                    <li>• Granular ACL & password-protected links</li>
-                    <li>• End-to-End Encryption (E2EE)</li>
-                    <li>• ADA High-Performance Backend (Rust/Go)</li>
-                </ul>
+    <!-- Goals Section -->
+    <section id="goals" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl font-bold text-gray-900">Why NextCloud 20? Core goals</h2>
+                <div class="w-20 h-1 bg-nextcloud-blue mx-auto mt-2 rounded-full"></div>
+                <p class="text-gray-600 text-lg mt-4">Three pillars that guided the redesign and feature set.</p>
             </div>
-            
-            <div class="glass-card p-6 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition-transform">📝</div>
-                <h3 class="text-xl font-bold text-accent-cyan mb-3">Office & Groupware</h3>
-                <ul class="text-sm text-slate-300 space-y-2">
-                    <li>• Real-time collaborative editing</li>
-                    <li>• MS Word, Excel, PowerPoint compatibility</li>
-                    <li>• Unified Calendar, Contacts, Mail, & Kanban</li>
-                    <li>• Secure server-to-server Federation</li>
-                </ul>
-            </div>
-
-            <div class="glass-card p-6 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition-transform">💬</div>
-                <h3 class="text-xl font-bold text-[#f59e0b] mb-3">Nextcloud Talk</h3>
-                <ul class="text-sm text-slate-300 space-y-2">
-                    <li>• WebRTC instant messaging & video</li>
-                    <li>• Direct browser or mobile app access</li>
-                    <li>• High-Performance Backend (HPB)</li>
-                    <li>• Bridges thousands of concurrent callers</li>
-                </ul>
-            </div>
-
-            <div class="glass-card p-6 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition-transform">🧠</div>
-                <h3 class="text-xl font-bold text-accent-magenta mb-3">Nextcloud Assistant</h3>
-                <ul class="text-sm text-slate-300 space-y-2">
-                    <li>• Fully on-premise AI models</li>
-                    <li>• Context-aware text translation</li>
-                    <li>• Thread summarization & audio transcription</li>
-                    <li>• Zero data leakage to commercial APIs</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- PROOF OF CONCEPT SECTION FOR VERCEL DEPLOYMENT -->
-    <section id="poc" class="py-20 bg-[#162032]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-12 text-center lg:text-left">
-                <h2 class="text-3xl font-bold border-l-4 border-accent-magenta pl-4 inline-block lg:block">Proof of Concept Gallery</h2>
-                <p class="mt-4 text-slate-400 max-w-2xl">Visual confirmation of enterprise-ready environments deployed during the validation phase.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- PoC Card 1 -->
-                <div class="glass-card overflow-hidden group">
-                    <div class="h-64 bg-slate-700 relative flex items-center justify-center">
-                        <!-- Replace src with your local image path for Vercel, e.g., src="./images/poc-1.png" -->
-                        <span class="text-slate-500 text-sm italic font-mono">[Replace with Personal PoC Image 1]</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-white text-lg">Server Admin Dashboard</h4>
-                            <span class="text-[10px] bg-accent-blue px-2 py-1 rounded text-white uppercase font-bold">Validated</span>
-                        </div>
-                        <p class="text-sm text-slate-400">Confirmation of system health, security hardening (A+ Rating), and user management configurations.</p>
-                    </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-7 rounded-2xl card-shadow border border-gray-100 transition hover:-translate-y-1 duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-nextcloud-light text-nextcloud-blue flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Centralized workflow</h3>
+                    <p class="text-gray-500">Dashboard as the default entry point — show upcoming events, Talk mentions, and favorite files instantly.</p>
                 </div>
-                <!-- PoC Card 2 -->
-                <div class="glass-card overflow-hidden group">
-                    <div class="h-64 bg-slate-700 relative flex items-center justify-center">
-                        <!-- Replace src with your local image path for Vercel, e.g., src="./images/poc-2.png" -->
-                        <span class="text-slate-500 text-sm italic font-mono">[Replace with Personal PoC Image 2]</span>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-white text-lg">Collaborative Workflow</h4>
-                            <span class="text-[10px] bg-accent-magenta px-2 py-1 rounded text-white uppercase font-bold">In-Action</span>
-                        </div>
-                        <p class="text-sm text-slate-400">Demonstrating real-time document editing and secure talk channels within a federated instance environment.</p>
-                    </div>
+                <div class="bg-white p-7 rounded-2xl card-shadow border border-gray-100 transition hover:-translate-y-1 duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-nextcloud-light text-nextcloud-blue flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Universal discovery</h3>
+                    <p class="text-gray-500">Search across files, emails, contacts, external GitHub issues, and Jira tickets — all from one search bar.</p>
+                </div>
+                <div class="bg-white p-7 rounded-2xl card-shadow border border-gray-100 transition hover:-translate-y-1 duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-nextcloud-light text-nextcloud-blue flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-plug"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Bridge ecosystems</h3>
+                    <p class="text-gray-500">Connect Slack, Mattermost, Twitter, and GitLab via Matterbridge and unified APIs — break silos.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-[#0b1120] py-12 border-t border-[#1e293b]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <div class="text-center md:text-left">
-                <div class="flex items-center space-x-2 mb-2 justify-center md:justify-start">
-                    <span class="text-2xl font-bold text-accent-blue">☁️</span>
-                    <span class="font-bold text-lg tracking-wider">NEXTCLOUD<span class="text-accent-cyan">HUB</span></span>
+    <!-- Specifications (system req) -->
+    <section id="specs" class="py-20 bg-nextcloud-dark text-white relative">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 40%, #ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold">Technical requirements & specifications</h2>
+                <div class="w-20 h-1 bg-blue-300 mx-auto mt-2 rounded-full"></div>
+                <p class="text-blue-100 mt-4">Lightweight enough for a Raspberry Pi, powerful enough for enterprise.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                <div class="bg-white/10 backdrop-blur-sm p-5 rounded-xl border border-white/20">
+                    <i class="fa-brands fa-ubuntu text-3xl mb-3 text-blue-200"></i>
+                    <h4 class="font-bold text-lg">OS</h4>
+                    <p class="text-sm text-blue-100">Ubuntu 18.04/20.04<br>CentOS 7/8, Debian 10+</p>
                 </div>
-                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Sovereign Enterprise Solutions</p>
-            </div>
-            
-            <div class="text-slate-500 text-xs text-center">
-                <p>&copy; 2026. Data synthesized from verified public sector and enterprise case studies.</p>
-                <p class="mt-1">Built with Tailwind CSS & Chart.js for high-fidelity data visualization.</p>
-            </div>
-
-            <div class="flex space-x-4">
-                <a href="#" class="p-2 glass-card hover:border-accent-cyan transition text-accent-cyan">
-                    <span class="sr-only">GitHub</span>
-                    <span class="font-bold">GH</span>
-                </a>
-                <a href="#" class="p-2 glass-card hover:border-accent-magenta transition text-accent-magenta">
-                    <span class="sr-only">Contact</span>
-                    <span class="font-bold">✉</span>
-                </a>
+                <div class="bg-white/10 backdrop-blur-sm p-5 rounded-xl border border-white/20">
+                    <i class="fa-solid fa-globe text-3xl mb-3 text-blue-200"></i>
+                    <h4 class="font-bold text-lg">Web server</h4>
+                    <p class="text-sm text-blue-100">Apache 2.4 / Nginx<br>PHP 7.3 or 7.4</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm p-5 rounded-xl border border-white/20">
+                    <i class="fa-solid fa-database text-3xl mb-3 text-blue-200"></i>
+                    <h4 class="font-bold text-lg">Database</h4>
+                    <p class="text-sm text-blue-100">MariaDB 10.2+ / MySQL 5.7+<br>PostgreSQL 9.6+</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm p-5 rounded-xl border border-white/20">
+                    <i class="fa-solid fa-microchip text-3xl mb-3 text-blue-200"></i>
+                    <h4 class="font-bold text-lg">Memory</h4>
+                    <p class="text-sm text-blue-100">Minimum 4 GB RAM<br>8 GB+ recommended for Hub features</p>
+                </div>
             </div>
         </div>
+    </section>
+
+    <!-- FEATURE SHOWCASE: All images used correctly -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Usable supported features in action</h2>
+                <div class="w-24 h-1 bg-nextcloud-blue mx-auto mt-2 rounded-full"></div>
+                <p class="text-gray-600 text-lg mt-4 max-w-3xl mx-auto">Threaded email, smart itinerary parsing, Deck cards inside calendar, and the all‑new dashboard widgets.</p>
+            </div>
+
+            <!-- Feature block: Dashboard (image: nextcloud20-dashboard.png) -->
+            <div class="flex flex-col lg:flex-row items-center gap-12 mb-20 pb-12 border-b border-gray-100">
+                <div class="lg:w-1/2 order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-regular fa-square"></i> Core innovation</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">✨ The Dashboard — central command center</h3>
+                    <p class="text-gray-600 text-lg leading-relaxed">NextCloud 20 replaces the classic file view with a fully customizable dashboard. Widgets show upcoming calendar events, Talk mentions, recommended files, and even weather or external project updates. Set a global status (online/away) with emoji — visible across all apps.</p>
+                    <ul class="mt-4 space-y-2 text-gray-600">
+                        <li class="flex items-start gap-2"><i class="fa-regular fa-circle-check text-nextcloud-blue mt-1"></i><span>Talk mentions & unread chat previews</span></li>
+                        <li class="flex items-start gap-2"><i class="fa-regular fa-circle-check text-nextcloud-blue mt-1"></i><span>Widgets for GitHub, GitLab, Jira, Twitter, and Moodle</span></li>
+                        <li class="flex items-start gap-2"><i class="fa-regular fa-circle-check text-nextcloud-blue mt-1"></i><span>“Recommended files” based on machine learning & usage</span></li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2 order-1 lg:order-2">
+                    <img src="nextcloud20-dashboard.png" alt="Nextcloud 20 Dashboard widget layout" class="rounded-xl shadow-2xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Dashboard: status, upcoming events, and Talk mentions integrated.</p>
+                </div>
+            </div>
+
+            <!-- Feature: Mail Threaded View + Mailbox management (image: NextCloud-20-mail_threaded_view.png) -->
+            <div class="flex flex-col lg:flex-row-reverse items-center gap-12 mb-20 pb-12 border-b border-gray-100">
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-regular fa-envelope"></i> Mail 2.0</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">📧 Threaded email & mailbox management</h3>
+                    <p class="text-gray-600 text-lg">The Mail app gets a massive upgrade: conversations are now grouped in clean threads, making long email chains readable. Folder management, priority inbox, and quick filters reduce clutter. Snippet view shows sender avatars and latest reply preview.</p>
+                    <p class="mt-3 text-gray-600">Combined with the unified search, finding email attachments or past itineraries is seamless. Users can also favorite important folders and collapse sidebars for focus.</p>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-mail_threaded_view.png" alt="Threaded email view in Nextcloud Mail" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Conversation threading + smart folder navigation</p>
+                </div>
+            </div>
+
+            <!-- Feature: Deck modal card view + attachments & todo list (image: NextCloud-20-deck_modal_card_view.png) -->
+            <div class="flex flex-col lg:flex-row items-center gap-12 mb-20 pb-12 border-b border-gray-100">
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-solid fa-chalkboard"></i> Deck · kanban</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">📌 Cards, checklists & timeline</h3>
+                    <p class="text-gray-600 text-lg"><strong>Deck</strong> brings Trello-like boards into your private cloud. In version 20, the modal card view gets enhanced: attachments preview, detailed comments, due date pickers, and activity timeline. Perfect for personal projects like “Learn Spanish” or team sprints.</p>
+                    <ul class="mt-3 space-y-1 text-gray-600 list-disc pl-5">
+                        <li>Rich checklists with progress tracking</li>
+                        <li>Assign users, set color labels, and add attachments</li>
+                        <li>Calendar integration shows Deck cards with deadlines</li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-deck_modal_card_view.png" alt="Deck modal card with description, attachments and checklist" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Card view with action needed, description, and timeline</p>
+                </div>
+            </div>
+
+            <!-- Feature: Calendar list view (meeting details) + deck in calendar (image: NextCloud-20-calendar_list_view.png) -->
+            <div class="flex flex-col lg:flex-row-reverse items-center gap-12 mb-20 pb-12 border-b border-gray-100">
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-regular fa-calendar-check"></i> Calendar + Deck fusion</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">🗓️ Smart calendar with event details & Deck cards</h3>
+                    <p class="text-gray-600 text-lg">Calendar gets a refreshed list view that shows rich details: meeting rooms, Talk links, attendee lists. But the highlight: <strong>Deck cards with due dates automatically appear as events</strong>. This bridges project management with your daily schedule.</p>
+                    <p class="mt-2 text-gray-600">Quick event creation, color-coded calendars (Personal, Work, Contact birthdays), and integrated Talk video conference links turn scheduling into collaboration.</p>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-calendar_list_view.png" alt="Calendar list view with detailed events, meeting room and Talk link" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Calendar list view: meeting details, video call links, and Deck integration</p>
+                </div>
+            </div>
+
+            <!-- Feature: Mail Itinerary parsing (email travel booking) image: NextCloud-20-mail_itinerary.png -->
+            <div class="flex flex-col lg:flex-row items-center gap-12 mb-20 pb-12 border-b border-gray-100">
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-solid fa-ticket"></i> Smart extraction</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">✈️ Travel itinerary & booking parsing</h3>
+                    <p class="text-gray-600 text-lg">NextCloud Mail now recognizes flight and hotel booking emails. The system extracts departure dates, reservation codes, and passenger info, displaying a clean summary card right inside the mail interface. Perfect for frequent travelers and business users.</p>
+                    <p class="mt-2 text-gray-600">This feature reduces manual copy-pasting and integrates directly with calendar suggestions — one click to add the trip to your agenda.</p>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-mail_itinerary.png" alt="Email itinerary parsing showing Lufthansa booking details" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Automatic itinerary card from email: departure, booking code, passenger info</p>
+                </div>
+            </div>
+
+            <!-- Feature: Mailbox management & extra Lufthansa booking details (image: NextCloud-20-mail_mailbox_management.png) -->
+            <div class="flex flex-col lg:flex-row-reverse items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="inline-flex items-center gap-2 bg-nextcloud-light/50 rounded-full px-4 py-1 text-nextcloud-blue text-sm font-semibold mb-3"><i class="fa-regular fa-folder-open"></i> Advanced mailbox UI</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">📂 Multi-account & mailbox management</h3>
+                    <p class="text-gray-600 text-lg">Handle multiple email accounts (including Gmail, Outlook, or custom IMAP) from one interface. The Mail app now includes a refined folder tree, quick filters for unread/flagged, and a collapsible sidebar. Shown here: detailed Lufthansa booking card and priority inbox structure.</p>
+                    <p class="mt-2 text-gray-600">Alongside, the security alerts from Google and delivery notifications are grouped, keeping your communication clean and manageable.</p>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="NextCloud-20-mail_mailbox_management.png" alt="Mailbox management with booking details and multi-folder view" class="rounded-xl shadow-xl border border-gray-200 img-hover-zoom w-full">
+                    <p class="text-center text-sm text-gray-500 mt-2">Mailbox management: Lufthansa booking card + account folders</p>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-nextcloud-light/30 rounded-2xl p-6 md:p-8 text-center border border-nextcloud-blue/20">
+                <div class="flex flex-wrap items-center justify-center gap-4 text-nextcloud-dark">
+                    <i class="fa-solid fa-diagram-project text-3xl"></i>
+                    <span class="font-semibold text-lg">Deep integrations across the Hub: Talk mentions, external API widgets, Matterbridge for Slack/Teams, and unified search across all content types.</span>
+                </div>
+                <p class="text-gray-600 mt-3 max-w-3xl mx-auto">The entire NextCloud 20 experience focuses on reducing silos. Dashboard widgets, global search cards, and Deck–Calendar synergy create a cohesive environment for teams and individuals.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CREATOR'S CREDITS SECTION (Josh Ebio, B.S. Computer Engineering) ========== -->
+    <section id="credits" class="py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 transform transition hover:shadow-2xl">
+                <div class="relative">
+                    <!-- subtle tech pattern -->
+                    <div class="absolute top-0 left-0 w-full h-2 bg-nextcloud-blue"></div>
+                    <div class="p-8 md:p-12">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="flex-shrink-0">
+                                <div class="w-32 h-32 bg-nextcloud-light rounded-full flex items-center justify-center shadow-md">
+                                    <i class="fa-solid fa-laptop-code text-5xl text-nextcloud-blue"></i>
+                                </div>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="inline-flex items-center gap-2 bg-nextcloud-blue/10 px-4 py-1.5 rounded-full text-nextcloud-dark text-sm font-semibold mb-4">
+                                    <i class="fa-regular fa-star-of-life"></i> 
+                                    <span>Case study creator & lead analyst</span>
+                                </div>
+                                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight">Josh Ebio</h2>
+                                <div class="flex flex-wrap items-center gap-3 mt-2 justify-center md:justify-start">
+                                    <span class="bg-nextcloud-blue text-white text-sm font-semibold px-3 py-1 rounded-full"><i class="fa-solid fa-graduation-cap mr-1"></i> B.S. in Computer Engineering</span>
+                                    <span class="text-gray-500 flex items-center gap-1"><i class="fa-regular fa-calendar-alt"></i> 2026 — NextCloud Ecosystem Research</span>
+                                </div>
+                                <div class="mt-5 text-gray-600 leading-relaxed border-l-4 border-nextcloud-blue pl-5 bg-gray-50/50 rounded-r-md py-2">
+                                    <p class="italic text-gray-700">“This independent report shows how a cooperative can use simple digital tools to organize local farm data, secure community micro-loans, and connect members without relying on expensive outside technology.”</p>
+                                </div>
+                                <div class="mt-6 flex flex-wrap gap-5 justify-center md:justify-start text-sm">
+                                    <div class="flex items-center gap-2 text-gray-700"><i class="fa-brands fa-github text-nextcloud-blue"></i> <span>github.com/EbioJosh</span></div>
+                                    <div class="flex items-center gap-2 text-gray-700"><i class="fa-regular fa-file-lines text-nextcloud-blue"></i> <span>Computer Engineering · Digital workspace specialization</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- signature line with degree confirmation -->
+                        <div class="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3 text-gray-500 text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-pen-to-square text-nextcloud-blue"></i>
+                                <span>Reviewed and authored by <strong class="text-gray-700">Josh Ebio</strong>, B.S. CompE</span>
+                            </div>
+                            <div class="flex items-center gap-2 font-mono">
+                                <i class="fa-regular fa-copyright"></i> 2026 — NextCloud Hub 20 deep-dive | All trademarks belong to respective owners.
+                            </div>
+                        </div>
+                        <div class="mt-3 text-center text-xs text-gray-400 flex justify-center gap-4">
+                            <span><i class="fa-regular fa-clock"></i> Published: March 2026</span>
+                            <span><i class="fa-regular fa-flask"></i> independent engineering analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-cloud text-nextcloud-blue text-xl"></i>
+                <span class="font-medium">NextCloud 20 Hub Case Study — Created by Josh Ebio (Computer Engineering)</span>
+            </div>
+            <div class="text-sm text-gray-400 text-center md:text-left">
+                Based on real interface analysis & community insights. Visuals and product references belong to NextCloud GmbH.
+            </div>
+            <div class="flex gap-5 text-gray-400">
+                <i class="fa-brands fa-github hover:text-white transition"></i>
+                <i class="fa-brands fa-linkedin-in hover:text-white transition"></i>
+                <i class="fa-regular fa-message hover:text-white transition"></i>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-8 pt-4 border-t border-gray-800">📘 Dashboard · Threaded mail · Deck & Calendar fusion · Designed & documented by Josh Ebio, B.S. Computer Engineering</div>
     </footer>
-
-    <script>
-        const wrapLabel = (str) => {
-            if (str.length <= 16) return str;
-            let words = str.split(' ');
-            let lines = [];
-            let currentLine = '';
-            words.forEach(word => {
-                if ((currentLine + word).length > 16) {
-                    if (currentLine.trim()) lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            });
-            if (currentLine.trim()) lines.push(currentLine.trim());
-            return lines.length === 1 ? lines[0] : lines;
-        };
-
-        const globalTooltipConfig = {
-            callbacks: {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
-                    } else {
-                        return label;
-                    }
-                }
-            }
-        };
-
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.font.family = 'Inter';
-
-        const rawScaleLabels = ['T-Systems (MagentaCLOUD)', 'Amnesty International', 'TU Berlin (tubCloud)'];
-        const scaleLabels = rawScaleLabels.map(wrapLabel);
-        
-        const ctxScale = document.getElementById('scaleChart').getContext('2d');
-        new Chart(ctxScale, {
-            type: 'bar',
-            data: {
-                labels: scaleLabels,
-                datasets: [{
-                    label: 'Active Users',
-                    data: [2200000, 102300, 30000],
-                    backgroundColor: ['#e20074', '#00e5ff', '#0082c9'],
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: globalTooltipConfig
-                },
-                scales: {
-                    x: {
-                        type: 'logarithmic',
-                        grid: { color: '#334155' },
-                        title: { display: true, text: 'Users (Log Scale)', color: '#cbd5e1' }
-                    },
-                    y: {
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
-
-        const rawDbLabels = ['Peak Load Reduction', 'Off-Peak Load Reduction'];
-        const dbLabels = rawDbLabels.map(wrapLabel);
-
-        const ctxDb = document.getElementById('dbChart').getContext('2d');
-        new Chart(ctxDb, {
-            type: 'bar',
-            data: {
-                labels: dbLabels,
-                datasets: [{
-                    label: 'Database Load Drop (%)',
-                    data: [38, 49],
-                    backgroundColor: ['#0082c9', '#00e5ff'],
-                    borderRadius: 6,
-                    barPercentage: 0.6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: globalTooltipConfig
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 60,
-                        grid: { color: '#334155' },
-                        ticks: {
-                            callback: function(value) { return value + '%' }
-                        }
-                    },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-
-        const rawHwLabels = ['Testing/SOHO', 'Medium Enterprise', 'Massive Scale (Per Node)'];
-        const hwLabels = rawHwLabels.map(wrapLabel);
-
-        const ctxHw = document.getElementById('hwChart').getContext('2d');
-        new Chart(ctxHw, {
-            type: 'bar',
-            data: {
-                labels: hwLabels,
-                datasets: [
-                    {
-                        label: 'vCPU Cores',
-                        data: [4, 8, 32],
-                        backgroundColor: '#00e5ff',
-                        borderRadius: 4
-                    },
-                    {
-                        label: 'RAM (GB)',
-                        data: [8, 16, 128],
-                        backgroundColor: '#e20074',
-                        borderRadius: 4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top', labels: { color: '#cbd5e1' } },
-                    tooltip: globalTooltipConfig
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#334155' }
-                    },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-    </script>
 </body>
 </html>
