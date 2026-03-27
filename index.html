@@ -15,6 +15,7 @@
     3. Scale & Impact (Case Studies): Visualizes the user base scale (T-Systems vs others) and database performance improvements (TU Berlin).
     4. Hardware & Specifications: A grouped bar chart displaying CPU/RAM scaling across deployment sizes.
     5. Core Ecosystem: Breakdown of Files, Office, Talk, and AI features.
+    6. Proof of Concept: Visual gallery for personal deployment verification.
 
     Chart Choices:
     - User Base Scale (Goal: Compare): Horizontal Bar Chart to accommodate vastly different scales. Chosen Library: Chart.js. NO SVG used.
@@ -29,6 +30,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
             color: #f8fafc;
+            scroll-behavior: smooth;
         }
         .chart-container {
             position: relative;
@@ -56,6 +58,12 @@
         .bg-accent-blue { background-color: #0082c9; }
         .bg-accent-magenta { background-color: #e20074; }
         .border-accent-cyan { border-color: #00e5ff; }
+        
+        /* Custom scrollbar for better UX on Vercel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
@@ -71,6 +79,7 @@
                 <a href="#goals" class="hover:text-white transition">Goals</a>
                 <a href="#impact" class="hover:text-white transition">Impact</a>
                 <a href="#specs" class="hover:text-white transition">Specs</a>
+                <a href="#poc" class="hover:text-white transition">Gallery</a>
             </div>
         </div>
     </nav>
@@ -277,8 +286,72 @@
         </div>
     </section>
 
-    <footer class="bg-[#0b1120] py-8 border-t border-[#1e293b] text-center text-sm text-slate-500">
-        <p>&copy; 2026 Sovereign Enterprise Solutions. Data sourced from public Nextcloud case studies.</p>
+    <!-- PROOF OF CONCEPT SECTION FOR VERCEL DEPLOYMENT -->
+    <section id="poc" class="py-20 bg-[#162032]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center lg:text-left">
+                <h2 class="text-3xl font-bold border-l-4 border-accent-magenta pl-4 inline-block lg:block">Proof of Concept Gallery</h2>
+                <p class="mt-4 text-slate-400 max-w-2xl">Visual confirmation of enterprise-ready environments deployed during the validation phase.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- PoC Card 1 -->
+                <div class="glass-card overflow-hidden group">
+                    <div class="h-64 bg-slate-700 relative flex items-center justify-center">
+                        <!-- Replace src with your local image path for Vercel, e.g., src="./images/poc-1.png" -->
+                        <span class="text-slate-500 text-sm italic font-mono">[Replace with Personal PoC Image 1]</span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-lg">Server Admin Dashboard</h4>
+                            <span class="text-[10px] bg-accent-blue px-2 py-1 rounded text-white uppercase font-bold">Validated</span>
+                        </div>
+                        <p class="text-sm text-slate-400">Confirmation of system health, security hardening (A+ Rating), and user management configurations.</p>
+                    </div>
+                </div>
+                <!-- PoC Card 2 -->
+                <div class="glass-card overflow-hidden group">
+                    <div class="h-64 bg-slate-700 relative flex items-center justify-center">
+                        <!-- Replace src with your local image path for Vercel, e.g., src="./images/poc-2.png" -->
+                        <span class="text-slate-500 text-sm italic font-mono">[Replace with Personal PoC Image 2]</span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-lg">Collaborative Workflow</h4>
+                            <span class="text-[10px] bg-accent-magenta px-2 py-1 rounded text-white uppercase font-bold">In-Action</span>
+                        </div>
+                        <p class="text-sm text-slate-400">Demonstrating real-time document editing and secure talk channels within a federated instance environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-[#0b1120] py-12 border-t border-[#1e293b]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="text-center md:text-left">
+                <div class="flex items-center space-x-2 mb-2 justify-center md:justify-start">
+                    <span class="text-2xl font-bold text-accent-blue">☁️</span>
+                    <span class="font-bold text-lg tracking-wider">NEXTCLOUD<span class="text-accent-cyan">HUB</span></span>
+                </div>
+                <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Sovereign Enterprise Solutions</p>
+            </div>
+            
+            <div class="text-slate-500 text-xs text-center">
+                <p>&copy; 2026. Data synthesized from verified public sector and enterprise case studies.</p>
+                <p class="mt-1">Built with Tailwind CSS & Chart.js for high-fidelity data visualization.</p>
+            </div>
+
+            <div class="flex space-x-4">
+                <a href="#" class="p-2 glass-card hover:border-accent-cyan transition text-accent-cyan">
+                    <span class="sr-only">GitHub</span>
+                    <span class="font-bold">GH</span>
+                </a>
+                <a href="#" class="p-2 glass-card hover:border-accent-magenta transition text-accent-magenta">
+                    <span class="sr-only">Contact</span>
+                    <span class="font-bold">✉</span>
+                </a>
+            </div>
+        </div>
     </footer>
 
     <script>
